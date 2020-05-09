@@ -12,7 +12,7 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store'] // 中间件白名单
+            'except' => ['show', 'create', 'store', 'index'] // 中间件白名单
         ]);
         $this->middleware('guest', [
             'only' => ['create']
@@ -85,5 +85,13 @@ class UsersController extends Controller
         session()->flash('success', '更新成功!');
 
         return redirect()->route('users.show', [$user]);
+    }
+
+    public function destroy(User $user)
+    {
+        $this->authorize('destroy', $user);
+        $user->delete();
+        session()->flash('success', '成功删除用户！');
+        return back();
     }
 }
